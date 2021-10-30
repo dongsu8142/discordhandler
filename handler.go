@@ -26,7 +26,7 @@ type Context struct {
 	HasMentionFirst bool
 }
 
-type HandlerFunc func(*discordgo.Session, *discordgo.Message, *Context)
+type HandlerFunc func(*Handler, *discordgo.Session, *discordgo.Message, *Context)
 
 type Handler struct {
 	Routes  []*Route
@@ -128,10 +128,10 @@ func (h *Handler) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCr
 	r, fl := h.FuzzyMatch(ctx.Content)
 	if r != nil {
 		ctx.Fields = fl
-		r.Run(ds, mc.Message, ctx)
+		r.Run(h, ds, mc.Message, ctx)
 		return
 	}
 	if h.Default != nil && (ctx.HasMentionFirst) {
-		h.Default.Run(ds, mc.Message, ctx)
+		h.Default.Run(h, ds, mc.Message, ctx)
 	}
 }
